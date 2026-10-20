@@ -31,8 +31,8 @@ export default function Login() {
   };
 
   const handleDemo = () => {
-    setPhone('9876543210');
-    setPassword('demo123');
+    setPhone('+919876543210');
+    setPassword('demo1234');
   };
 
   return (
@@ -81,7 +81,7 @@ export default function Login() {
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '2.5rem', marginTop: '2.5rem' }}>
-            {[{ val: '85%', label: 'Accuracy' }, { val: '30%', label: 'Less Waste' }, { val: '2x', label: 'Faster' }].map((s, i) => (
+            {[{ val: '6-wk', label: 'Forecasts' }, { val: '30+', label: 'Festivals' }, { val: '3', label: 'AI Fallbacks' }].map((s, i) => (
               <div key={i} style={{ textAlign: 'center', opacity: 0, animation: `fade-in-up 0.5s ${0.3 + i * 0.1}s forwards` }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary-light)' }}>{s.val}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', marginTop: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</div>
@@ -177,8 +177,8 @@ export default function Login() {
               Demo Credentials
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-text-secondary)', lineHeight: 1.8 }}>
-              <span style={{ color: 'var(--color-text-muted)' }}>phone:</span> <span style={{ color: 'var(--color-primary-light)' }}>9876543210</span><br />
-              <span style={{ color: 'var(--color-text-muted)' }}>pass:</span> <span style={{ color: 'var(--color-primary-light)' }}>demo123</span>
+              <span style={{ color: 'var(--color-text-muted)' }}>phone:</span> <span style={{ color: 'var(--color-primary-light)' }}>+919876543210</span><br />
+              <span style={{ color: 'var(--color-text-muted)' }}>pass:</span> <span style={{ color: 'var(--color-primary-light)' }}>demo1234</span>
             </div>
             <button
               onClick={handleDemo}

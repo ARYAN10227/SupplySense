@@ -50,6 +50,9 @@ class Settings(BaseSettings):
     CORS_ORIGIN_REGEX: Optional[str] = None
 
     # App
+    # Seed the demo shop on startup when the database has no users
+    AUTO_SEED_DEMO: bool = True
+
     APP_NAME: str = "SupplySense"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True

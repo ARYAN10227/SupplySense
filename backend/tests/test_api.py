@@ -58,3 +58,8 @@ def test_protected_route_requires_token(client):
 def test_invalid_business_type_fails_validation(client):
     r = client.post("/api/auth/register", json={**USER, "phone": "9000000002", "business_type": "casino"})
     assert r.status_code == 422
+
+
+def test_demo_account_is_auto_seeded_and_can_log_in(client):
+    r = client.post("/api/auth/login", json={"phone": "+919876543210", "password": "demo1234"})
+    assert r.status_code == 200, r.text

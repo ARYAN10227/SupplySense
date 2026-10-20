@@ -96,6 +96,15 @@ async def lifespan(app: FastAPI):
             "Set a strong SECRET_KEY env var in production!"
         )
 
+    # Seed the demo account if the database is empty (e.g. a fresh or reset
+    # cloud database), so the live demo login always works.
+    if settings.AUTO_SEED_DEMO:
+        try:
+            from seed_data import seed
+            seed()
+        except Exception as e:
+            logger.warning("Demo auto-seed failed: %s", e)
+
     # Auto-populate product_batches if empty
     _ensure_product_batches()
 
