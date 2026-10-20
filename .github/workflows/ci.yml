@@ -7,15 +7,21 @@ on:
 
 jobs:
   backend:
-    name: Backend (compile check)
+    name: Backend (tests)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Byte-compile all backend modules
-        run: python -m compileall -q backend
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r requirements.txt pytest
+      - name: Run test suite
+        run: python -m pytest -q
 
   frontend:
     name: Frontend (build)

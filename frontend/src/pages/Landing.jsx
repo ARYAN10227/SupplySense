@@ -5,7 +5,7 @@ import AnimatedText from '../components/AnimatedText';
 import ShimmerButton from '../components/ShimmerButton';
 
 const features = [
-  { icon: '📊', title: 'AI Demand Forecasting', desc: 'ML-powered 4-week predictions with 85%+ accuracy. Never guess inventory levels again.' },
+  { icon: '📊', title: 'AI Demand Forecasting', desc: 'Prophet-based 6-week forecasts with low / likely / high confidence bands and plain-English explanations.' },
   { icon: '🔔', title: 'Smart Alerts', desc: 'Real-time low-stock, expiry, and overstock warnings. Stay ahead of every disruption.' },
   { icon: '📸', title: 'Photo Upload', desc: 'Snap a photo of your inventory register. Our OCR extracts data in seconds.' },
   { icon: '📈', title: 'What-If Scenarios', desc: 'Simulate price changes, seasonal demand, and supply disruptions before they happen.' },
@@ -20,10 +20,10 @@ const steps = [
   { num: '04', title: 'Take Action', desc: 'One-click reorders and data-driven decisions' },
 ];
 
-const testimonials = [
-  { name: 'Rajesh Kumar', role: 'Kirana Owner, Delhi', text: 'SupplySense reduced my wastage by 30%. The AI predictions are surprisingly accurate for my small shop.', avatar: 'RK' },
-  { name: 'Priya Sharma', role: 'Pharmacy Owner, Mumbai', text: 'Expiry alerts alone saved me ₹15,000 last month. This tool pays for itself.', avatar: 'PS' },
-  { name: 'Arun Patel', role: 'General Store, Ahmedabad', text: 'The photo upload feature is magic. No more manual data entry after a long day.', avatar: 'AP' },
+const useCases = [
+  { name: 'Pharmacies', role: 'Seasonal demand', text: 'Disease-season signals (dengue, flu) boost forecasts for fever and ORS medicines before stock runs out, and batch-level expiry tracking flags stock to clear early.', avatar: '💊' },
+  { name: 'Kirana stores', role: 'Festival spikes', text: 'A curated calendar of 30+ Indian festivals adjusts forecasts ahead of Diwali, Holi and Eid, so reorder lists reflect the rush before it arrives.', avatar: '🏪' },
+  { name: 'Small distributors', role: 'Paper to digital', text: 'Photograph a handwritten ledger, review the extracted rows, and get a supplier-grouped reorder list exportable as CSV or PDF.', avatar: '📦' },
 ];
 
 export default function Landing() {
@@ -145,7 +145,7 @@ export default function Landing() {
             </div>
 
             <div style={{ display: 'flex', gap: '2rem', marginTop: '2.5rem', opacity: 0, animation: 'fade-in-up 0.6s 0.9s forwards' }}>
-              {[{ val: '10K+', label: 'Shops' }, { val: '85%', label: 'Forecast Accuracy' }, { val: '30%', label: 'Waste Reduced' }].map((s, i) => (
+              {[{ val: '6-wk', label: 'Forecast Horizon' }, { val: '30+', label: 'Festivals Tracked' }, { val: '3', label: 'AI Fallbacks' }].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary-light)' }}>{s.val}</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>{s.label}</div>
@@ -289,19 +289,19 @@ export default function Landing() {
       >
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <span className="badge badge-success" style={{ marginBottom: '1rem', display: 'inline-flex' }}>Testimonials</span>
+            <span className="badge badge-success" style={{ marginBottom: '1rem', display: 'inline-flex' }}>Use cases</span>
             <h2 style={{
               fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 800,
               opacity: isVisible('testimonials') ? 1 : 0,
               transform: isVisible('testimonials') ? 'translateY(0)' : 'translateY(20px)',
               transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
             }}>
-              Loved by <span className="gradient-text">10,000+</span> Shopkeepers
+              Built for <span className="gradient-text">Indian small retailers</span>
             </h2>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-            {testimonials.map((t, i) => (
+            {useCases.map((t, i) => (
               <div
                 key={i}
                 className="glass-card"
@@ -324,12 +324,9 @@ export default function Landing() {
                     <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{t.role}</div>
                   </div>
                 </div>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.7, fontStyle: 'italic' }}>
-                  "{t.text}"
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.7, }}>
+                  {t.text}
                 </p>
-                <div style={{ display: 'flex', gap: '2px', marginTop: '1rem' }}>
-                  {[1,2,3,4,5].map(s => <span key={s} style={{ color: '#FBBF24', fontSize: '0.9rem' }}>★</span>)}
-                </div>
               </div>
             ))}
           </div>
@@ -388,7 +385,7 @@ export default function Landing() {
           background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.15), rgba(139,92,246,0.08), transparent)',
         }} />
         <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>
-          © 2025 SupplySense — AI-Powered Inventory Intelligence for Bharat
+          © 2026 SupplySense — AI-Powered Inventory Intelligence for Bharat
         </p>
       </footer>
 

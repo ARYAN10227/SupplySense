@@ -13,13 +13,15 @@ export default function Settings() {
   
   const notifs = rawNotifs || {};
   
+  const storedUser = (() => { try { return JSON.parse(localStorage.getItem('stocksense-user')) || {}; } catch { return {}; } })();
+  const storedShop = (() => { try { return JSON.parse(localStorage.getItem('stocksense-shop')) || {}; } catch { return {}; } })();
   const [profile, setProfile] = useState({
-    name: 'Priya Admin',
-    email: 'priya@stocksense.in',
-    phone: '+91 9876543210',
-    businessName: JSON.parse(localStorage.getItem('stocksense-shop') || '{}').shopName || 'Priya Medical Store',
-    city: JSON.parse(localStorage.getItem('stocksense-shop') || '{}').city || 'Hyderabad',
-    state: JSON.parse(localStorage.getItem('stocksense-shop') || '{}').state || 'Telangana',
+    name: storedUser.owner_name || storedUser.name || storedUser.shop_name || '',
+    email: storedUser.email || '',
+    phone: storedUser.phone || '',
+    businessName: storedUser.shop_name || storedShop.shopName || '',
+    city: storedUser.city || storedShop.city || '',
+    state: storedUser.state || storedShop.state || '',
   });
 
   const tabs = [

@@ -224,6 +224,27 @@ Create `backend/.env` using `.env.example` as a template. **Never commit real AP
 
 ---
 
+## 🧪 Testing
+
+The backend has a pytest suite that runs offline (SQLite, AI providers disabled):
+
+```bash
+cd backend
+pip install -r requirements.txt pytest
+python -m pytest
+```
+
+| Test file | What it covers |
+|:---|:---|
+| `test_anomaly_detection.py` | Z-score computation, spike/drop classification, multi-week pattern detection |
+| `test_reorder_point.py` | Reorder point = lead-time demand + safety stock, service-level behaviour |
+| `test_csv_parser.py` | Column auto-detection, heuristic fallback when AI is unavailable, bad rows |
+| `test_api.py` | Health check, register → login → protected route, duplicate/invalid input |
+
+GitHub Actions runs these tests and a production frontend build on every push.
+
+---
+
 ## ☁️ Cloud Deployment
 
 SupplySense deploys to free-tier cloud hosting as two independent pieces:
@@ -606,6 +627,7 @@ supplysense/
 │   ├── seed_data.py              # Demo data seeder (products + sales)
 │   ├── requirements.txt          # Python dependencies
 │   ├── Dockerfile                # Backend container image
+│   ├── tests/                    # pytest suite (unit + API tests)
 │   ├── routers/                  # API endpoint handlers (11 routers)
 │   │   ├── auth.py               #   JWT login/register
 │   │   ├── inventory.py          #   Product CRUD + stock management + health analytics
@@ -861,7 +883,7 @@ The following are honest descriptions of what is **not fully implemented** or ha
 | **Multi-user support** | The system supports multiple users with JWT auth, but role-based access control (owner/staff/distributor) is not implemented. |
 | **Notification delivery** | The settings page shows email notification preferences, but external delivery (email/SMS) is not wired up — in-app alerts are the only active channel. |
 | **AI quota limits** | Gemini free tier has rate limits; the system uses `gemini-2.0-flash` with exponential backoff retries and falls back to OpenRouter → Ollama when quota is exhausted. |
-| **Test coverage** | There are no automated unit or integration tests yet. CI (GitHub Actions) currently checks that the backend compiles and the frontend builds. |
+| **Test coverage** | 23 backend tests cover anomaly detection, reorder-point maths, CSV parsing and the auth API. Forecasting (Prophet), OCR and the frontend have no automated tests yet. |
 
 ---
 
@@ -870,11 +892,11 @@ The following are honest descriptions of what is **not fully implemented** or ha
 With more time, we would prioritise:
 
 1. **Complete multilingual coverage** — Full translation files for Tamil, Telugu, Marathi, Bengali, and Gujarati
-2. **Automated test suite** — pytest for backend services (especially forecast and anomaly logic), React Testing Library for frontend components
+2. **Broader test coverage** — Forecast-service tests with fixed seeds, and React Testing Library for frontend components
 3. **Multi-tenant architecture** — Role-based access for shop owners, distributors, and staff
 4. **Notification delivery** — Wire up email/SMS so alerts reach users outside the dashboard
 5. **Historical prediction tracking** — Store each generated forecast snapshot to compute true MAPE over time
-6. **Continuous deployment** — Extend the existing CI build checks with tests and gated deploys to Vercel + Render
+6. **Continuous deployment** — Gate Vercel + Render deploys on the existing CI checks
 7. **Barcode scanning** — Camera-based product identification for faster stock updates
 8. **Supplier portal** — Direct integration for automatic order placement
 
@@ -919,7 +941,7 @@ All commits are signed off in compliance with the **Developer Certificate of Ori
 
 SupplySense was originally built by **Team Zypher** (Ayush Kumar, Arnav Kumar, Yash Agarwal, Gaurav Kumar) for the NatWest Hackathon 2026 ([original repo](https://github.com/Arnav1709/natwest-cfp)).
 
-This fork is maintained by **Aryan Raj** ([GitHub](https://github.com/ARYAN10227) · [LeetCode](https://leetcode.com/ARYAN12work/)): cloud deployment on Vercel + Render, CI, and documentation.
+This fork is maintained by **Aryan Raj** ([GitHub](https://github.com/ARYAN10227) · [LeetCode](https://leetcode.com/ARYAN12work/)): cloud deployment on Vercel + Render, the test suite and CI, and documentation.
 
 **SupplySense** — *"From notebook to forecast in 60 seconds."*
 ---
