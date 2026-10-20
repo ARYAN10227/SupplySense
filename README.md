@@ -1,0 +1,925 @@
+<div align="center">
+
+# 🧠 SupplySense
+
+### AI-Powered Predictive Demand Forecasting & Intelligent Inventory Management
+
+**The forecasting engine that knows about dengue season before your supplier does.**
+
+[![NatWest Hackathon](https://img.shields.io/badge/NatWest-AI%20Predictive%20Forecasting-6366F1?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDEgMTJoM3Y5aDZ2LTZoNHY2aDZ2LTloM0wxMiAyeiIvPjwvc3ZnPg==)](https://natwest.com)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Prophet](https://img.shields.io/badge/Prophet-ML-FF6F00?style=for-the-badge&logo=meta&logoColor=white)](https://facebook.github.io/prophet/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![License](https://img.shields.io/badge/License-Apache%202.0-10B981?style=for-the-badge)](LICENSE)
+
+<br/>
+
+> **SupplySense doesn't just forecast demand — it understands *why* demand changes.**
+> Festival season? Disease outbreak? Monsoon week? Our AI automatically detects real-world signals and adjusts your forecasts before you even notice the trend.
+
+<br/>
+
+[📖 Overview](#-overview) · [✨ Features](#-implemented-features) · [🚀 Quick Start](#-quick-start) · [🛠️ Tech Stack](#️-tech-stack) · [📊 Usage Examples](#-usage-examples) · [🏗️ Architecture](#️-architecture) · [⚠️ Limitations](#️-limitations)
+
+</div>
+
+---
+
+## 📖 Overview
+
+**SupplySense** is a full-stack AI-powered inventory management and demand forecasting platform designed for small and medium businesses in India. It combines **Facebook Prophet** time-series forecasting with **real-world context signals** — disease outbreaks, festival calendars, and monsoon patterns — to produce demand predictions that understand *why* demand changes, not just *that* it changed.
+
+**The problem it solves:** India's 12 million+ small retailers — kirana stores, pharmacies, general shops — manage inventory on gut feel and handwritten ledgers. They have no affordable, accessible tool to anticipate demand shifts from festivals, seasons, or disease outbreaks. This results in ₹1.4 trillion in inventory waste annually: medicines expire on shelves while others run out during peak need.
+
+**Who it's for:** Small business owners (kirana stores, pharmacies, distributors) who need AI-powered forecasting delivered through a simple, multilingual web dashboard.
+
+---
+
+## 📖 Ramesh's Story
+
+> *Meet **Ramesh**. He runs a small pharmacy in Nagpur. Every evening, he writes the day's sales in a notebook — "Paracetamol 12, ORS 8, Cough Syrup 5." He's done this for 15 years.*
+>
+> *Last monsoon, dengue hit his area hard. Paracetamol sold out in 2 days. By the time he called his distributor, the entire city was scrambling for stock. He lost ₹15,000 in sales that week alone.*
+>
+> *This year, Ramesh uses **SupplySense**.*
+>
+> *He photographs his notebook. AI reads his handwriting — even the Hindi numerals and messy dates. In 60 seconds, his 15 years of paper records become a digital dataset.*
+>
+> *Three weeks before monsoon peak, SupplySense detects rising dengue reports in Nagpur via live web search. It automatically boosts Paracetamol's forecast by 25% and raises an alert on his dashboard in Hindi:*
+>
+> **"⚠️ डेंगू का मौसम शुरू हो रहा है। पेरासिटामोल का स्टॉक 3 दिन में खत्म हो जाएगा। अभी 200 यूनिट ऑर्डर करें।"**
+>
+> *This time, Ramesh is ready. He opens the AI reorder list, sees a sorted procurement list grouped by supplier, and places his order with confidence.*
+
+**That's SupplySense.** From notebook → to dataset → to AI forecast → to action — in the language you speak, for the reality you live.
+
+---
+
+## ✨ Implemented Features
+
+The following features are **fully implemented and functional** in the current codebase:
+
+### AI & Forecasting
+- **Context-aware demand forecasting** — 6-week rolling forecasts using Facebook Prophet with confidence bands (low / likely / high at 80% interval width), with real-world context overlays for festivals, diseases, and weather patterns
+- **External factor integration** — Curated lookup tables for 30+ Indian festivals, seasonal disease patterns, and weather heuristics that automatically adjust forecast multipliers
+- **AI intelligence pipeline** — 3-stage pipeline: Serper API web search → Gemini AI analysis → boost multiplier calculation; gracefully degrades to hardcoded JSON lookup tables if APIs are unavailable
+- **Embedding-based cold-start forecasting** — For products with no sales history, ChromaDB-powered product embeddings find similar products and use their sales patterns as a proxy forecast (Prophet+embeddings or SMA+embeddings)
+- **SMA fallback** — Graceful degradation to Simple Moving Average when fewer than 8 weeks of sales history are available
+- **Z-score anomaly detection** — Statistical analysis on forecast residuals to catch demand spikes (Z > 2.0), drops (Z < -2.0), and structural pattern shifts (3+ consecutive weeks in same direction), with plain-English explanations
+- **Explainable forecasts** — Every prediction includes a human-readable explanation of *why* the forecast looks the way it does (e.g., "Dengue season active in Nagpur → Paracetamol +25%"), generated via Gemini AI with context-specific reasoning
+- **Statistical reorder engine** — Auto-calculated reorder points using `(avg_daily × lead_time) + safety_stock` formula with Z-score service levels; recalculates in real-time after every sale
+- **AI-enhanced reorder points** — Optional Gemini-driven adjustment layer that overrides statistical defaults based on product category, expiry status, and business criticality
+- **Smart reorder list** — AI-calculated reorder quantities ranked by urgency (days-to-stockout), grouped by supplier, with CSV/PDF export
+- **3-provider AI fallback chain** — Gemini (primary) → OpenRouter (fallback) → Ollama (local), with rule-based logic as final fallback if all providers fail
+- **Scenario planning** — "What if I run a 20% discount?" / "What if demand grows 15%?" / "What if my supplier delays by 5 days?" — side-by-side forecast comparison
+
+### Expiry Tracking & Disposal Intelligence
+- **Batch-level expiry tracking** — Track individual product batches with expiry dates, quantities, and value-at-risk calculations
+- **Expiry calendar timeline** — Visual calendar view grouped by month with risk-coded cards (expired / <30 days / 30–90 days / 90+ days)
+- **AI disposal recommendations** — Gemini-powered disposal strategy suggestions (discount sale, return to supplier, bundle promotion, donate, write-off) with estimated value recovery percentages
+- **Rule-based fallback** — Automatic rule-based disposal suggestions when AI providers are unavailable
+- **Auto-batch creation** — Batches are automatically created from product uploads and data ingestion flows
+- **Auto-migration** — On startup, automatically populates `product_batches` from existing products with expiry dates (handles databases seeded before the batch feature)
+
+### Data Ingestion
+- **Handwriting OCR** — Photograph a handwritten ledger and Gemini Vision extracts product names, quantities, prices, and dates; handles mixed Hindi/English text and Hindi numerals (१,२,३ → 1,2,3)
+- **CSV/Excel upload** — Auto-detects columns (with space/underscore normalization), parses sales history, and supports bulk import; AI-powered product category inference for CSV files without a category column
+- **Manual data entry** — Form-based product and sales input
+- **Mandatory verification step** — All OCR-extracted and parsed data must be human-reviewed before entering the forecast pipeline (trust layer, not blind automation)
+- **Stock validation** — Sales that exceed available stock are rejected with clear error feedback
+- **Upload history tracking** — All uploads (CSV, image, manual) are tracked with record counts and verification status; only verified uploads appear in history
+
+### AI Translation
+- **Real-time product name transliteration** — AI-powered transliteration of product names into Hindi (Devanagari), Tamil, Telugu, Marathi, Bengali, and Gujarati scripts
+- **DB-cached translations** — Translations are stored in a `translation_cache` table to avoid redundant AI calls for previously translated text
+- **Graceful fallback** — Returns original text if AI is unavailable
+
+### Frontend (19 Screens)
+- **Landing page** with value proposition, animated particle backgrounds, aurora effects, and CTAs
+- **Onboarding flow** — Language selection (English, Hindi), business type, shop setup
+- **Dashboard** — Overview KPIs, forecasting charts (Plotly.js) with AI trend explanations, inventory health heatmaps, scenario planning
+- **Product catalog** with individual product detail pages and per-product forecasts
+- **Upload & verify** pages for CSV and image ingestion with smart source detection
+- **Record sales** page with multi-modal entry: manual, CSV upload, and OCR-from-image
+- **AI reorder list** with urgency tiers, supplier grouping, and CSV/PDF export
+- **Expiry tracker** — Calendar timeline, batch table, risk-coded cards, and AI disposal recommendations
+- **Alerts feed** with real-time active alert count in sidebar badge
+- **Settings** — Profile, notification preferences, language
+- **Dark-mode-first glassmorphism UI** with animated components (shimmer buttons, glow cards, animated counters), responsive mobile layout, and an error boundary crash recovery screen
+
+### Platform
+- **JWT authentication** with protected routes
+- **RESTful API** with 12 routers and auto-generated Swagger docs at `/docs`
+- **Docker Compose** — One-command full-stack launch (backend + frontend + Nginx)
+- **Cloud-deployable** — Frontend on Vercel + backend on Render (Docker) with Postgres; see [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Nginx reverse proxy** — Unified access on port 80
+- **i18n** — English and Hindi translation files via react-i18next (other languages listed in UI as selectable but only these two have full translation coverage)
+- **PostgreSQL database** with SQLAlchemy ORM; SQLite fallback for fully offline local development
+- **In-memory caching** — TTL-based cache (via `cachetools`) for reorder lists, health metrics, forecasts, alerts, and anomalies to maintain performance
+- **Background scheduler** — APScheduler jobs for anomaly scans (8:30 AM daily) and seasonal checks (Monday 9:00 AM)
+- **Seed data script** for demo with pre-populated products and sales history
+- **Top-level error boundary** — React `AppErrorBoundary` catches crashes and shows a styled recovery page instead of a blank white screen
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Docker** and **Docker Compose** installed ([Get Docker](https://docs.docker.com/get-docker/))
+- A **Gemini API key** (free — [Get one at AI Studio](https://aistudio.google.com/))
+- *(Optional)* [Ollama](https://ollama.com) installed locally for privacy-first local AI inference
+
+### Option 1: Docker Compose (Recommended)
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/team-zypher/supplysense.git
+cd supplysense
+
+# 2. Create your environment file
+cp .env.example backend/.env
+
+# 3. Edit backend/.env and add your API key(s)
+#    At minimum, set GEMINI_API_KEY:
+nano backend/.env
+#    → Replace "your-gemini-api-key-here" with your actual key
+
+# 4. Launch the full stack (builds backend + frontend + nginx)
+docker compose up --build
+
+# 5. (First run only) Seed the database with demo data
+#    In a new terminal:
+docker exec supplysense-backend python seed_data.py
+```
+
+Once running, access the application at:
+
+| Service | URL | Description |
+|:---|:---|:---|
+| 🖥️ **Frontend** | http://localhost:5173 | React web application |
+| ⚙️ **Backend API** | http://localhost:8000 | FastAPI REST endpoints |
+| 📖 **API Docs** | http://localhost:8000/docs | Interactive Swagger UI |
+| 🌐 **Unified (Nginx)** | http://localhost | All services via reverse proxy |
+
+To stop all services:
+
+```bash
+docker compose down
+```
+
+### Option 2: Local Development (Without Docker)
+
+```bash
+# ── Backend ────────────────────────────────────────────────────
+cd backend
+python -m venv venv
+source venv/bin/activate       # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Create .env with your API keys (copy from root .env.example)
+cp ../.env.example .env
+# Edit .env and set GEMINI_API_KEY
+
+# Seed demo data and start the server
+python seed_data.py
+uvicorn main:app --reload --port 8000
+
+# ── Frontend (new terminal) ───────────────────────────────────
+cd frontend
+npm install
+npm run dev
+# → Opens at http://localhost:5173
+```
+
+### Environment Variables
+
+Create `backend/.env` using `.env.example` as a template. **Never commit real API keys.**
+
+| Variable | Required | Default | Purpose |
+|:---|:---:|:---|:---|
+| `GEMINI_API_KEY` | ✅ | — | Primary AI — OCR, forecasting intelligence, NLP, translations |
+| `SECRET_KEY` | ✅ | *(preset)* | JWT authentication signing key |
+| `DATABASE_URL` | ⬜ | `sqlite:///./data/SupplySense.db` | Database connection string (supports PostgreSQL; `postgres://` URLs are auto-normalized) |
+| `CORS_ORIGINS` | ⬜ | — | Comma-separated frontend origins allowed in production (e.g. your Vercel URL) |
+| `CORS_ORIGIN_REGEX` | ⬜ | — | Optional regex to allow dynamic preview deploys (e.g. `https://.*\.vercel\.app`) |
+| `SERPER_API_KEY` | ⬜ | — | Live web search for disease/festival intelligence |
+| `OPENROUTER_API_KEY` | ⬜ | — | Cloud AI fallback provider (#2 in chain) |
+| `OLLAMA_BASE_URL` | ⬜ | `http://host.docker.internal:11434` | Local Ollama AI inference URL |
+| `OLLAMA_MODEL` | ⬜ | `gemma3:4b` | Ollama model name |
+| `OLLAMA_TIMEOUT` | ⬜ | `300` | Timeout in seconds for Ollama text generation |
+| `OLLAMA_VISION_TIMEOUT` | ⬜ | `600` | Timeout in seconds for Ollama vision/image calls |
+| `APP_NAME` | ⬜ | `SupplySense` | Application display name |
+| `APP_VERSION` | ⬜ | `1.0.0` | Application version string |
+| `DEBUG` | ⬜ | `true` | Enable debug logging and SQLAlchemy echo (set `false` in production) |
+
+> 💡 **Minimum setup**: Only `GEMINI_API_KEY` is required. All other services have graceful fallbacks.
+
+---
+
+## ☁️ Cloud Deployment
+
+SupplySense deploys to free-tier cloud hosting as two independent pieces:
+
+- **Frontend** (React + Vite) → **Vercel** (static hosting, `frontend/vercel.json` included)
+- **Backend** (FastAPI + Prophet) → **Render** (Docker web service, `render.yaml` blueprint included) + **Postgres**
+
+```
+┌──────────────┐     HTTPS /api      ┌─────────────────────┐
+│  Vercel      │ ──────────────────► │  Render (Docker)    │
+│  React SPA   │   VITE_API_BASE_URL │  FastAPI + Prophet  │
+└──────────────┘                     │         │           │
+                                      │         ▼           │
+                                      │   Render Postgres   │
+                                      └─────────────────────┘
+```
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for step-by-step instructions. Quick summary:
+
+1. **Backend** — Render → New → Blueprint → select repo (uses `render.yaml`). Provisions the Docker backend + free Postgres. After deploy, set `CORS_ORIGINS` to your frontend URL and add `GEMINI_API_KEY`.
+2. **Frontend** — Vercel → New Project → Root Directory `frontend`. Set `VITE_API_BASE_URL` to `https://<your-backend>.onrender.com/api`.
+
+> ⚠️ In the cloud, always use **Postgres** (Render's free disk is ephemeral — SQLite data is wiped on restart) and set a strong `SECRET_KEY` with `DEBUG=false`.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Version | Purpose |
+|:---|:---|:---|:---|
+| **Forecasting** | Facebook Prophet | ≥1.1.6 | Time-series demand prediction with confidence bands |
+| **AI / NLP** | Google Gemini 2.0 Flash | via `google-genai` | OCR, demand factor analysis, forecast explanations, disposal advice, translations |
+| **AI Fallback** | OpenRouter + Ollama | REST / local | Cloud fallback (Gemini via OpenRouter) + local inference (gemma3:4b) |
+| **Web Search** | Serper API | REST | Real-time disease/festival/weather signal detection |
+| **Anomaly Detection** | NumPy + SciPy | ≥1.26 | Z-score spike/drop/pattern analysis |
+| **Reorder Engine** | Statistical + AI | — | Z-score safety stock + AI-driven service level adjustment |
+| **Embeddings** | ChromaDB | ≥0.4.0 | Product similarity embeddings for cold-start forecasting |
+| **Backend** | Python + FastAPI | 3.11 / 0.115 | Async REST API with auto-generated Swagger docs |
+| **ORM** | SQLAlchemy | 2.0 | Database abstraction (PostgreSQL, SQLite-compatible) |
+| **Database** | PostgreSQL | — | Cloud-hosted relational database (SQLite fallback for local dev) |
+| **Scheduler** | APScheduler | ≥3.10 | Background jobs for alerts, anomaly scans, briefings |
+| **Caching** | cachetools | ≥5.3 | In-memory TTL cache for expensive queries |
+| **Frontend** | React + Vite | 19 / 8.0 | Component-based SPA with hot module replacement |
+| **Charts** | Plotly.js + react-plotly.js | 3.5 | Interactive forecast charts with confidence bands |
+| **Animations** | anime.js + Lucide React | 4.3 / 1.8 | Micro-animations, shimmer effects, icon library |
+| **Routing** | React Router | 6.30 | Client-side routing with protected routes |
+| **i18n** | i18next + react-i18next | 26 / 17 | Multilingual UI (English, Hindi) |
+| **PDF Export** | ReportLab | 4.2 | Reorder list PDF generation |
+| **Auth** | python-jose + passlib | — | JWT token-based authentication |
+| **Deployment** | Docker Compose + Nginx (local) · Vercel + Render (cloud) | — | One-command local launch; free-tier cloud hosting |
+
+### Why These Choices
+
+- **Prophet over ARIMA/LSTM**: Prophet handles missing data, holiday effects, and changepoints natively — ideal for messy small-business sales data with irregular gaps.
+- **Gemini over GPT**: Free tier available, native multimodal vision for OCR, and multilingual generation in Indian languages without fine-tuning.
+- **3-provider fallback**: Gemini → OpenRouter → Ollama ensures AI is always available; rule-based logic provides a final safety net.
+- **ChromaDB for cold-start**: New products with zero sales history still get meaningful forecasts by leveraging sales patterns from similar products via embedding similarity.
+- **PostgreSQL**: Reliable cloud-hosted relational store; SQLAlchemy ORM makes it one config change to switch to any SQL database. SQLite is supported for fully offline local development.
+
+---
+
+## 📊 Usage Examples
+
+### Screenshots and Screen Recordings
+
+
+https://github.com/user-attachments/assets/3b9db9c2-6288-4d41-a932-5d6555d11b04
+
+
+https://github.com/user-attachments/assets/9b176a24-03f8-416d-b1c8-35b35fc12d24
+
+
+![WhatsApp Image 2026-04-12 at 10 45 31 PM](https://github.com/user-attachments/assets/92ee7a54-4061-4759-b57a-f45a35209db5)
+![WhatsApp Image 2026-04-12 at 10 45 24 PM](https://github.com/user-attachments/assets/73c6db30-0cd1-4443-99fb-c33cd04c00c6)
+![WhatsApp Image 2026-04-12 at 10 45 28 PM](https://github.com/user-attachments/assets/92d7c11f-8eae-4b14-8469-cb3666966baa)
+![WhatsApp Image 2026-04-12 at 10 45 15 PM](https://github.com/user-attachments/assets/41ace838-4012-46b0-9031-a949d4b43b2d)
+
+
+
+
+### Demo Login
+
+After seeding the database, log in with the pre-configured demo account:
+
+```
+Shop Name: Ramesh Medical Store
+City:      Nagpur
+State:     Maharashtra
+```
+
+### API Examples
+
+All API endpoints are documented at `http://localhost:8000/docs` (Swagger UI). Here are key examples:
+
+#### 1. Get Forecast for a Product
+
+```bash
+curl http://localhost:8000/api/forecast/1
+```
+
+**Sample Response:**
+
+```json
+{
+  "product_id": 1,
+  "product_name": "Paracetamol 500mg",
+  "method": "prophet",
+  "forecast": [
+    { "week": "2026-W16", "low": 60, "likely": 85, "high": 120 },
+    { "week": "2026-W17", "low": 65, "likely": 92, "high": 130 },
+    { "week": "2026-W18", "low": 70, "likely": 98, "high": 140 }
+  ],
+  "baseline": [
+    { "week": "2026-W16", "value": 75 }
+  ],
+  "drivers": "Dengue season active in Maharashtra (Jul–Oct). Forecast boosted +25%.",
+  "trend": "upward",
+  "trend_pct": 8.5,
+  "accuracy": { "mape": 11.2 }
+}
+```
+
+#### 2. Upload an Image for OCR
+
+```bash
+curl -X POST http://localhost:8000/api/upload/image \
+  -F "file=@notebook_photo.jpg" \
+  -F "language=hi"
+```
+
+**Sample Response:**
+
+```json
+{
+  "extracted_data": [
+    {
+      "product_name": "Paracetamol",
+      "quantity": 12,
+      "price": 45.0,
+      "date": "2026-04-10",
+      "confidence": 0.92
+    },
+    {
+      "product_name": "ORS Sachets",
+      "quantity": 8,
+      "price": 25.0,
+      "date": "2026-04-10",
+      "confidence": 0.87
+    }
+  ],
+  "overall_confidence": 0.89,
+  "needs_verification": true
+}
+```
+
+#### 3. Get Anomaly Alerts
+
+```bash
+curl http://localhost:8000/api/anomalies
+```
+
+**Sample Response:**
+
+```json
+{
+  "anomalies": [
+    {
+      "product_id": 1,
+      "product_name": "Paracetamol 500mg",
+      "type": "spike",
+      "z_score": 2.8,
+      "severity": "high",
+      "explanation": "Demand is 3× normal this week — possible local illness outbreak.",
+      "recommendation": "Consider emergency reorder of 200 units."
+    }
+  ]
+}
+```
+
+#### 4. Get AI Reorder List
+
+```bash
+curl http://localhost:8000/api/reorder
+```
+
+#### 5. Export Reorder as CSV
+
+```bash
+curl http://localhost:8000/api/reorder/export?format=csv -o reorder_list.csv
+```
+
+#### 6. Get Expiry Batches
+
+```bash
+curl http://localhost:8000/api/expiry/batches
+```
+
+**Sample Response:**
+
+```json
+{
+  "batches": [
+    {
+      "id": 1,
+      "product_name": "Paracetamol 500mg",
+      "batch_number": "BATCH-PAR-A",
+      "quantity": 30,
+      "expiry_date": "2026-05-01",
+      "days_to_expiry": 8,
+      "total_value": 450.0,
+      "risk": "critical"
+    }
+  ],
+  "summary": {
+    "expired": 2,
+    "critical": 5,
+    "warning": 8,
+    "safe": 12,
+    "total": 27,
+    "total_value_at_risk": 12500.00
+  }
+}
+```
+
+#### 7. Get AI Disposal Recommendations
+
+```bash
+curl -X POST http://localhost:8000/api/expiry/advice \
+  -H "Content-Type: application/json" \
+  -d '{"product_ids": [1, 2]}'
+```
+
+#### 8. Translate Product Names
+
+```bash
+curl -X POST http://localhost:8000/api/translate \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["Paracetamol", "Cough Syrup"], "target_lang": "hi"}'
+```
+
+**Sample Response:**
+
+```json
+{
+  "translations": {
+    "Paracetamol": "पैरासिटामोल",
+    "Cough Syrup": "कफ सिरप"
+  }
+}
+```
+
+#### 9. Check AI Provider Status
+
+```bash
+curl http://localhost:8000/api/ai-status
+```
+
+**Sample Response:**
+
+```json
+{
+  "primary": { "provider": "gemini", "configured": true, "available": true },
+  "fallback_1": { "provider": "ollama", "model": "gemma3:4b", "available": false },
+  "fallback_2": { "provider": "openrouter", "configured": true },
+  "active_provider": "gemini"
+}
+```
+
+---
+
+## 🏗️ Architecture
+
+### High-Level System Design
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        WEB["🖥️ React SPA<br/>(Vite + Plotly.js)"]
+    end
+
+    subgraph "Reverse Proxy"
+        NGX["🌐 Nginx<br/>:80"]
+    end
+
+    subgraph "Application Layer"
+        API["⚙️ FastAPI<br/>:8000"]
+    end
+
+    subgraph "AI / ML Services"
+        PROPHET["📈 Facebook Prophet<br/>Time-Series Forecasting"]
+        ANOMALY["🔍 Z-Score Engine<br/>Anomaly Detection"]
+        OCR["📷 Vision OCR<br/>Handwriting Extraction"]
+        INTEL["🦠 Intelligence<br/>Disease + Festival + Weather"]
+        REORDER["📦 Reorder Engine<br/>Smart Procurement"]
+        EMBED["🧬 Embeddings<br/>Cold-Start Similarity"]
+    end
+
+    subgraph "AI Providers (Fallback Chain)"
+        GEMINI["☁️ Gemini 2.0 Flash<br/>(Primary Cloud)"]
+        OPENROUTER["☁️ OpenRouter<br/>(Cloud Fallback)"]
+        OLLAMA["🏠 Ollama / Gemma<br/>(Local Fallback)"]
+    end
+
+    subgraph "Expiry Intelligence"
+         EXPIRY["📅 Expiry Tracker<br/>Batch-level tracking"]
+         DISPOSAL["🤖 Disposal Engine<br/>AI recommendations"]
+    end
+
+    subgraph "Translation Layer"
+         TRANSLATE["🌐 Transliteration<br/>AI + DB cache"]
+    end
+
+    subgraph "External Intelligence"
+        SERPER["🔍 Serper API<br/>Web Search"]
+    end
+
+    subgraph "Data Layer"
+        DB[("💾 PostgreSQL<br/>Supabase Cloud")]
+        CHROMADB[("🧬 ChromaDB<br/>Embeddings")]
+        LOOKUP["📁 Lookup JSONs<br/>diseases · festivals · weather"]
+    end
+
+    WEB --> NGX --> API
+    NGX --> WEB
+
+    API --> PROPHET
+    API --> ANOMALY
+    API --> OCR
+    API --> INTEL
+    API --> REORDER
+    API --> EMBED
+    API --> EXPIRY
+    API --> TRANSLATE
+    API --> DB
+
+    EMBED --> CHROMADB
+    OCR --> GEMINI
+    INTEL --> SERPER
+    INTEL --> GEMINI
+    OCR -.-> OPENROUTER
+    OCR -.-> OLLAMA
+    INTEL -.-> LOOKUP
+
+    PROPHET --> DB
+    ANOMALY --> DB
+    REORDER --> DB
+
+    classDef primary fill:#0D9488,stroke:#0F766E,color:#fff
+    classDef ai fill:#6366F1,stroke:#4F46E5,color:#fff
+    classDef external fill:#F59E0B,stroke:#D97706,color:#000
+    classDef data fill:#1E293B,stroke:#334155,color:#F8FAFC
+
+    class API primary
+    class PROPHET,ANOMALY,OCR,INTEL,REORDER,EMBED ai
+    class GEMINI,OLLAMA,OPENROUTER,SERPER external
+    class DB,CHROMADB,LOOKUP data
+```
+
+### Folder Structure
+
+```
+supplysense/
+├── README.md                     # This file
+├── DEPLOYMENT.md                 # Vercel + Render cloud deployment guide
+├── .env.example                  # Backend environment template (no secrets)
+├── render.yaml                   # Render blueprint (backend Docker + Postgres)
+├── docker-compose.yml            # Development orchestration (3 services)
+├── docker-compose.prod.yml       # Production build variant
+├── start.sh / stop.sh / logs.sh  # Helper scripts for Docker management
+├── seed.sh                       # Quick-seed script
+├── nginx/
+│   └── nginx.conf                # Reverse proxy configuration
+│
+├── backend/                      # Python FastAPI backend
+│   ├── main.py                   # Application entry point + lifespan + auto-migration
+│   ├── config.py                 # Pydantic-based settings from env vars
+│   ├── database.py               # SQLAlchemy engine + session factory (PG + SQLite)
+│   ├── cache.py                  # In-memory TTL cache manager (cachetools)
+│   ├── seed_data.py              # Demo data seeder (products + sales)
+│   ├── requirements.txt          # Python dependencies
+│   ├── Dockerfile                # Backend container image
+│   ├── routers/                  # API endpoint handlers (12 routers)
+│   │   ├── auth.py               #   JWT login/register
+│   │   ├── inventory.py          #   Product CRUD + stock management + health analytics
+│   │   ├── upload.py             #   CSV/image upload + OCR + category inference
+│   │   ├── forecast.py           #   Forecast generation + retrieval
+│   │   ├── anomalies.py          #   Anomaly detection endpoints
+│   │   ├── reorder.py            #   Smart reorder list + export (CSV/PDF)
+│   │   ├── alerts.py             #   Alert feed management
+│   │   ├── sales.py              #   Sales recording with stock validation
+│   │   ├── settings.py           #   User preferences
+│   │   ├── translate.py          #   AI transliteration + DB cache
+│   │   └── expiry.py             #   Batch-level expiry tracking + AI disposal advice
+│   ├── models/                   # SQLAlchemy ORM models (13 models)
+│   │   ├── user.py               #   User / shop profile
+│   │   ├── product.py            #   Product catalog + inventory
+│   │   ├── sales.py              #   Sales history records
+│   │   ├── forecast.py           #   Stored forecast data + accuracy tracking
+│   │   ├── anomaly.py            #   Detected anomaly records
+│   │   ├── alert.py              #   Alert notifications
+│   │   ├── stock_movement.py     #   Stock movement audit trail
+│   │   ├── lookup.py             #   Disease seasons + festival calendar
+│   │   ├── notification.py       #   Notification preferences
+│   │   ├── upload_history.py     #   Upload tracking (CSV/image/manual)
+│   │   ├── translation_cache.py  #   AI translation cache
+│   │   └── product_batch.py      #   Batch-level expiry tracking
+│   ├── schemas/                  # Pydantic request/response schemas
+│   │   ├── inventory.py          #   Product + stock schemas
+│   │   ├── forecast.py           #   Forecast response schemas
+│   │   ├── upload.py             #   OCR/CSV upload schemas
+│   │   ├── sales.py              #   Sales recording schemas
+│   │   └── ...                   #   Auth, alert, anomaly, reorder, settings
+│   ├── services/                 # AI/ML business logic
+│   │   ├── ai_client.py          #   3-provider fallback AI client (Gemini → OpenRouter → Ollama)
+│   │   ├── forecast_service.py   #   Prophet-based forecasting engine with embedding cold-start
+│   │   ├── anomaly_service.py    #   Z-score anomaly detection
+│   │   ├── intelligence_service.py # Disease/festival/weather signals + Serper/Gemini pipeline
+│   │   ├── ocr_service.py        #   Handwriting OCR via vision AI
+│   │   ├── reorder_service.py    #   Smart reorder calculations + supplier grouping
+│   │   ├── reorder_point_calculator.py # Statistical + AI reorder point engine
+│   │   ├── alert_service.py      #   Background alert jobs (daily briefing, anomaly scan, etc.)
+│   │   ├── embedding_service.py  #   ChromaDB product similarity for cold-start forecasting
+│   │   └── lookup_data/          #   Curated intelligence datasets
+│   │       ├── disease_seasons.json
+│   │       ├── festival_calendar.json
+│   │       └── weather_heuristics.json
+│   └── utils/                    # Shared utilities
+│       ├── auth.py               #   JWT token helpers
+│       ├── csv_parser.py         #   CSV column detection + parsing + space/underscore normalization
+│       └── pdf_generator.py      #   ReportLab PDF export
+│
+├── frontend/                     # React 19 + Vite SPA
+│   ├── index.html                # HTML entry point
+│   ├── package.json              # Node.js dependencies
+│   ├── vite.config.js            # Vite dev server + proxy config
+│   ├── vercel.json               # Vercel build + SPA routing config
+│   ├── .env.example              # Frontend env template (VITE_API_BASE_URL)
+│   ├── Dockerfile                # Frontend container image
+│   └── src/
+│       ├── App.jsx               # Router + protected routes + error boundary
+│       ├── main.jsx              # React DOM entry point
+│       ├── components/           # Shared UI components
+│       │   ├── Layout/           #   Sidebar + top nav layout with alert badge
+│       │   ├── PlotChart.jsx     #   Reusable Plotly chart wrapper
+│       │   ├── AnimatedCounter.jsx  # Smooth number animations
+│       │   ├── AnimatedText.jsx     # Text reveal animations
+│       │   ├── AuroraBackground.jsx # Aurora gradient effect
+│       │   ├── GlowCard.jsx         # Hover glow card effect
+│       │   ├── ParticleBackground.jsx # Animated particle canvas
+│       │   └── ShimmerButton.jsx    # Shimmer-effect CTA buttons
+│       ├── pages/                # 19 page components
+│       │   ├── Landing.jsx       #   Public landing page with animations
+│       │   ├── Login.jsx         #   Authentication
+│       │   ├── onboarding/       #   3-step onboarding flow
+│       │   │   ├── LanguageSelection.jsx
+│       │   │   ├── BusinessType.jsx
+│       │   │   └── ShopSetup.jsx
+│       │   ├── dashboard/        #   Overview, Forecasting, Inventory Health, Scenarios
+│       │   │   ├── Overview.jsx
+│       │   │   ├── Forecasting.jsx
+│       │   │   ├── InventoryHealth.jsx
+│       │   │   └── Scenarios.jsx
+│       │   ├── products/         #   Catalog + detail pages
+│       │   │   ├── ProductCatalog.jsx
+│       │   │   └── ProductDetail.jsx
+│       │   ├── upload/           #   Upload + verification pages
+│       │   │   ├── Upload.jsx
+│       │   │   └── Verify.jsx
+│       │   ├── sales/            #   Multi-modal sales entry
+│       │   │   └── RecordSales.jsx
+│       │   ├── Reorder.jsx       #   AI reorder list
+│       │   ├── ExpiryTracker.jsx #   Expiry calendar + AI disposal
+│       │   ├── Alerts.jsx        #   Alert feed
+│       │   └── Settings.jsx      #   User preferences
+│       ├── services/
+│       │   └── api.js            # API client with error handling
+│       ├── hooks/
+│       │   └── useApi.js         # Custom fetch hook with loading/error states
+│       ├── i18n/                 # Internationalization
+│       │   ├── index.js          #   i18next config
+│       │   └── locales/
+│       │       ├── en.json       #   English translations
+│       │       └── hi.json       #   Hindi translations
+│       └── styles/               # CSS design system
+│           ├── index.css         #   Global styles + CSS variables
+│           ├── layout.css        #   Layout + responsive grid
+│           ├── components.css    #   Component-level styles
+│           └── animations.css    #   Micro-animations + transitions
+│
+├── shared/                       # Cross-service contracts (read-only)
+│   ├── api-contracts.md          # API endpoint specifications
+│   ├── schema.sql                # Database DDL
+│   └── design-tokens.css         # CSS variables / design system
+│
+├── docs/                         # Architecture documentation
+│   ├── HLD.md                    # High-level design document
+│   ├── HLD_mermaid.md            # Architecture diagrams (Mermaid)
+│   ├── sequence_diagrams.md      # Interaction sequence diagrams
+│   └── sequence_diagrams_mermaid.md
+│
+└── data/                         # Sample datasets
+    ├── sales_8weeks.csv          # 8-week sales history (demo data)
+    └── inventory.png             # Sample handwritten ledger image
+```
+
+### AI Forecasting Pipeline
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant FE as 🖥️ React Frontend
+    participant API as ⚙️ FastAPI
+    participant FC as 📈 Forecast Service
+    participant EMBED as 🧬 Embedding Service
+    participant INTEL as 🦠 Intelligence Service
+    participant SERPER as 🔍 Serper API
+    participant GEMINI as ☁️ Gemini AI
+    participant PROPHET as 📊 Facebook Prophet
+    participant DB as 💾 PostgreSQL
+
+    U->>FE: View product forecast
+    FE->>API: GET /api/forecast/{product_id}
+    API->>FC: generate_forecast(product_id)
+
+    FC->>DB: Fetch sales_history
+    DB-->>FC: Weekly sales data
+
+    alt Sufficient Data (≥8 weeks)
+        FC->>PROPHET: Fit model (sliding window)
+        PROPHET-->>FC: yhat, yhat_lower, yhat_upper
+    else Insufficient Data (<8 weeks)
+        FC->>EMBED: find_similar_products()
+        EMBED-->>FC: Similar products + proxy sales
+        alt Proxy data available
+            FC->>PROPHET: Fit on merged data (70% own + 30% proxy)
+            PROPHET-->>FC: Proxy-boosted forecast
+        else No proxy data
+            FC->>FC: SMA fallback (4-week average)
+        end
+    end
+
+    FC->>FC: Compute naive baseline
+
+    FC->>INTEL: get_external_factors(product, city, state)
+    INTEL->>SERPER: Search "disease outbreak {city} April 2026"
+    SERPER-->>INTEL: Live web snippets
+    INTEL->>GEMINI: Analyze search results for demand impact
+    GEMINI-->>INTEL: {boost_pct: 25, drivers: [...]}
+    INTEL-->>FC: boost_multiplier=1.25, drivers
+
+    FC->>FC: Apply boost to forecast bands
+    FC->>GEMINI: Generate AI trend explanation
+    GEMINI-->>FC: "Dengue season active..."
+    FC->>DB: Store forecast records (upsert)
+
+    FC-->>API: ForecastResponse
+    API-->>FE: JSON with confidence bands + drivers + explanation
+    FE->>U: Render Plotly chart + explanation
+```
+
+### AI Provider Fallback Chain
+
+```mermaid
+graph TD
+    REQ["🔄 AI Request<br/>(Text or Vision)"] --> GEMINI{"☁️ Gemini 2.0 Flash<br/>API Key configured?"}
+
+    GEMINI -->|"✅ Success"| RES["✅ Response"]
+    GEMINI -->|"❌ Failed / Quota"| OPENROUTER{"☁️ OpenRouter<br/>API Key configured?"}
+
+    OPENROUTER -->|"✅ Success"| RES
+    OPENROUTER -->|"❌ Failed / No Key"| OLLAMA{"🏠 Ollama (Local)<br/>Model running?"}
+
+    OLLAMA -->|"✅ Success"| RES
+    OLLAMA -->|"❌ All Failed"| FAIL["⚠️ Graceful Degradation<br/>Rule-based fallback"]
+
+    classDef success fill:#10B981,stroke:#059669,color:#fff
+    classDef fail fill:#EF4444,stroke:#DC2626,color:#fff
+    classDef provider fill:#6366F1,stroke:#4F46E5,color:#fff
+
+    class RES success
+    class FAIL fail
+    class OLLAMA,GEMINI,OPENROUTER provider
+```
+
+### OCR Data Ingestion Pipeline
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 👤 Shopkeeper
+    participant FE as 🖥️ Upload Page
+    participant API as ⚙️ FastAPI
+    participant OCR as 📷 OCR Service
+    participant AI as ☁️ AI Vision
+    participant DB as 💾 PostgreSQL
+
+    U->>FE: 📸 Photograph handwritten ledger
+    FE->>API: POST /api/upload/image (multipart)
+    API->>OCR: process_ledger_image(bytes, language)
+
+    OCR->>AI: call_vision(image, OCR prompt)
+    Note over AI: Extracts: names, dates,<br/>quantities, prices,<br/>Hindi numerals, confidence
+
+    AI-->>OCR: JSON array of entries
+
+    OCR->>OCR: Convert Hindi numerals (०→0)
+    OCR->>OCR: Normalize dates (20+ formats)
+    OCR->>OCR: Validate categories
+    OCR->>OCR: Assign confidence scores
+
+    OCR-->>API: {extracted_data, overall_confidence}
+    API-->>FE: Parsed rows with confidence
+
+    FE->>U: 📝 Verification screen<br/>(edit low-confidence cells)
+
+    U->>FE: ✅ "I've reviewed and confirmed"
+    FE->>API: POST /api/upload/verify
+    API->>DB: Create products + sales + batches
+    API->>API: Trigger forecast generation + reorder recalculation
+    API-->>FE: {products_created, forecast_triggered}
+```
+
+---
+
+## ⚠️ Limitations
+
+The following are honest descriptions of what is **not fully implemented** or has **known constraints**:
+
+| Area | Limitation |
+|:---|:---|
+| **i18n coverage** | The UI offers 7 language options (Hindi, Tamil, Telugu, Marathi, Bengali, Gujarati), but only English and Hindi have complete translation files. Selecting other languages currently falls back to English. Product names can be transliterated to all 6 Indian languages via the AI translation API. |
+| **Forecast accuracy tracking** | MAPE is computed when sufficient history exists, but the "predicted vs actual" overlay chart on the forecasting page uses calculated data rather than stored historical predictions. |
+| **Multi-user support** | The system supports multiple users with JWT auth, but role-based access control (owner/staff/distributor) is not implemented. |
+| **Notification delivery** | The settings page shows email notification preferences, but external delivery (email/SMS) is not wired up — in-app alerts are the only active channel. |
+| **AI quota limits** | Gemini free tier has rate limits; the system uses `gemini-2.0-flash` with exponential backoff retries and falls back to OpenRouter → Ollama when quota is exhausted. |
+| **Test coverage** | The project does not currently include automated unit or integration tests. |
+
+---
+
+## 🔮 Future Improvements
+
+With more time, we would prioritise:
+
+1. **Complete multilingual coverage** — Full translation files for Tamil, Telugu, Marathi, Bengali, and Gujarati
+2. **Automated test suite** — pytest for backend services (especially forecast and anomaly logic), React Testing Library for frontend components
+3. **Multi-tenant architecture** — Role-based access for shop owners, distributors, and staff
+4. **Notification delivery** — Wire up email/SMS so alerts reach users outside the dashboard
+5. **Historical prediction tracking** — Store each generated forecast snapshot to compute true MAPE over time
+6. **CI/CD pipeline** — Automated build, test, and deploy to Vercel + Render on every push
+7. **Barcode scanning** — Camera-based product identification for faster stock updates
+8. **Supplier portal** — Direct integration for automatic order placement
+
+---
+
+## 🏆 Hackathon Criteria Alignment
+
+| NatWest Criteria | SupplySense Implementation |
+|:---|:---|
+| **AI-powered forecasting** | Prophet + external factor overlays (disease, festival, weather) + embedding cold-start |
+| **Uncertainty quantification** | Confidence bands (low/likely/high) with 80% interval |
+| **Anomaly detection** | Z-score analysis on forecast residuals (spike/drop/pattern) |
+| **Baseline comparison** | Naive "same as last period" dotted line overlay |
+| **Explainability** | AI-generated trend explanations: "Dengue season active (+25%)" |
+| **Non-expert usability** | Multilingual, mobile-first dark UI |
+| **Real-world applicability** | Designed for 12M+ Indian small businesses |
+| **Technical innovation** | Handwriting OCR + disease intelligence + embedding cold-start + expiry disposal AI |
+
+---
+
+## 👥 Target Users
+
+| Persona | Business | Pain Point | SupplySense Solution |
+|:---|:---|:---|:---|
+| 🏪 **Ramesh** | Kirana Store, Nagpur | Tracks 200 SKUs in a notebook | OCR → instant digital inventory |
+| 🏥 **Dr. Priya** | Pharmacy, Chennai | Misses dengue-season medicine spikes | Disease intelligence auto-boosts forecasts |
+| 📦 **Vikram** | Distributor, Delhi | Manages 50+ retailer orders | Dashboard briefings + bulk reorder exports |
+
+---
+
+## 📜 License
+
+This project is licensed under the **Apache License 2.0**. See [LICENSE](LICENSE) for details.
+
+All commits are signed off in compliance with the **Developer Certificate of Origin (DCO)**.
+
+---
+
+<div align="center">
+
+### Team Zypher
+
+| Role | Name |
+|:---|:---|
+| 💻 **Team Leader** | Ayush Kumar |
+| 💻 **Member** | Arnav Kumar |
+| 💻 **Member** | Yash Agarwal |
+| 💻 **Member** | Gaurav Kumar |
+
+**SupplySense** — *"From notebook to forecast in 60 seconds."*
+---
+[![NatWest Hackathon 2026](https://img.shields.io/badge/NatWest%20Hackathon-2026-6366F1?style=for-the-badge)](https://natwest.com)
+
+</div>
