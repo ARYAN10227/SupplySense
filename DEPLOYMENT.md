@@ -1,6 +1,6 @@
 # SupplySense — Deployment Guide
 
-Live demo: **https://stock-sense-orpin.vercel.app**
+Team deployment: **https://stock-sense-orpin.vercel.app** (hosted by a teammate; may lag behind this repo)
 
 The app is two pieces that deploy independently:
 

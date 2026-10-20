@@ -17,7 +17,7 @@
 
 ### 🔗 [Live Demo → stock-sense-orpin.vercel.app](https://stock-sense-orpin.vercel.app)
 
-<sub>Demo login: phone `+919876543210` · password `demo1234`. The backend runs on Render's free tier and sleeps when idle, so the first request can take 30–60 seconds.</sub>
+<sub>Team deployment, hosted by a teammate. It may run an older version than this repo. The backend is on Render's free tier and sleeps when idle, so the first request can take 30–60 seconds.</sub>
 
 <br/>
 
@@ -334,7 +334,7 @@ Phone:    +919876543210
 Password: demo1234
 ```
 
-The demo account belongs to *Ramesh Medical Store* (Nagpur, Maharashtra). The same login works on the [live demo](https://stock-sense-orpin.vercel.app).
+The demo account belongs to *Ramesh Medical Store* (Nagpur, Maharashtra). These credentials apply to a deployment built from this repo.
 
 ### API Examples
 
@@ -939,9 +939,9 @@ All commits are signed off in compliance with the **Developer Certificate of Ori
 
 ## 👥 Credits
 
-SupplySense was originally built by **Team Zypher** (Ayush Kumar, Arnav Kumar, Yash Agarwal, Gaurav Kumar) for the NatWest Hackathon 2026 ([original repo](https://github.com/Arnav1709/natwest-cfp)).
+SupplySense was built for the NatWest Hackathon 2026 by **Team Zypher** (Ayush Kumar, Arnav Kumar, Yash Agarwal, Gaurav Kumar) together with **Aryan Raj** ([GitHub](https://github.com/ARYAN10227) · [LeetCode](https://leetcode.com/ARYAN12work/)). Original team repo: [Arnav1709/natwest-cfp](https://github.com/Arnav1709/natwest-cfp).
 
-This fork is maintained by **Aryan Raj** ([GitHub](https://github.com/ARYAN10227) · [LeetCode](https://leetcode.com/ARYAN12work/)): cloud deployment on Vercel + Render, the test suite and CI, and documentation.
+In this repo, Aryan added the backend test suite, GitHub Actions CI, the demo-login and auto-seed fixes, and the documentation cleanup.
 
 **SupplySense** — *"From notebook to forecast in 60 seconds."*
 ---
