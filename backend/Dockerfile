@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────
-# StockSense Backend — Python FastAPI Container
+# SupplySense Backend — Python FastAPI Container
 # ─────────────────────────────────────────────────────────────
 # Prophet requires C++ build tools (gcc, g++, cmake).
 # System deps are installed first for Docker layer caching.

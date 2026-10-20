@@ -1,5 +1,5 @@
 """
-StockSense Seed Data Script.
+SupplySense Seed Data Script.
 
 Creates realistic pharmacy demo data:
 - 1 user (Dr. Priya's Pharmacy)
@@ -41,7 +41,7 @@ def seed():
             print("   Delete stocksense.db and re-run to reseed.")
             return
 
-        print("🌱 Seeding StockSense database...")
+        print("🌱 Seeding SupplySense database...")
 
         # ──────────────────────────────────────────
         # 1. CREATE USER

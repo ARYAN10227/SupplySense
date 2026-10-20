@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────
-# StockSense Frontend — React + Vite Dev Container
+# SupplySense Frontend — React + Vite Dev Container
 # ─────────────────────────────────────────────────────────────
 # Development mode: Vite HMR with --host 0.0.0.0 for Docker.
 # For production, see Dockerfile.prod (multi-stage nginx build).

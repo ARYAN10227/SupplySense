@@ -1,4 +1,4 @@
-# StockSense — HLD (Mermaid Diagrams)
+# SupplySense — HLD (Mermaid Diagrams)
 
 > All architecture diagrams from the HLD rendered as Mermaid code.
 
@@ -14,7 +14,7 @@ graph TB
         AD["📊 Admin / Distributor<br/>(Web App)"]
     end
 
-    subgraph StockSense["StockSense System"]
+    subgraph SupplySense["SupplySense System"]
         FE["React Frontend<br/>(Vite + Plotly.js)"]
         BE["FastAPI Backend<br/>(Python)"]
         DB["Database<br/>(SQLite / PostgreSQL)"]
@@ -488,7 +488,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph PythonBackend["StockSense Backend (Python)"]
+    subgraph PythonBackend["SupplySense Backend (Python)"]
         WA_SVC["WhatsAppService"]
         SEND["send_message(phone, text)"]
         BRIEF["send_daily_briefing(user_id)"]
@@ -591,7 +591,7 @@ graph TB
 
 ```mermaid
 mindmap
-    root((StockSense))
+    root((SupplySense))
         Frontend
             React + Vite
             Plotly.js Charts

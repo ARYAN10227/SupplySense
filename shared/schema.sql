@@ -1,5 +1,5 @@
 -- ============================================
--- StockSense Database Schema
+-- SupplySense Database Schema
 -- Source of truth for all agents
 -- ============================================
 

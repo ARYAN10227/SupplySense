@@ -13,6 +13,11 @@
 [![Prophet](https://img.shields.io/badge/Prophet-ML-FF6F00?style=for-the-badge&logo=meta&logoColor=white)](https://facebook.github.io/prophet/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![License](https://img.shields.io/badge/License-Apache%202.0-10B981?style=for-the-badge)](LICENSE)
+[![CI](https://github.com/ARYAN10227/SupplySense/actions/workflows/ci.yml/badge.svg)](https://github.com/ARYAN10227/SupplySense/actions/workflows/ci.yml)
+
+### 🔗 [Live Demo → stock-sense-orpin.vercel.app](https://stock-sense-orpin.vercel.app)
+
+<sub>Demo login: phone `+919876543210` · password `demo1234`. The backend runs on Render's free tier and sleeps when idle, so the first request can take 30–60 seconds.</sub>
 
 <br/>
 
@@ -111,7 +116,7 @@ The following features are **fully implemented and functional** in the current c
 
 ### Platform
 - **JWT authentication** with protected routes
-- **RESTful API** with 12 routers and auto-generated Swagger docs at `/docs`
+- **RESTful API** with 11 routers and auto-generated Swagger docs at `/docs`
 - **Docker Compose** — One-command full-stack launch (backend + frontend + Nginx)
 - **Cloud-deployable** — Frontend on Vercel + backend on Render (Docker) with Postgres; see [DEPLOYMENT.md](DEPLOYMENT.md)
 - **Nginx reverse proxy** — Unified access on port 80
@@ -136,8 +141,8 @@ The following features are **fully implemented and functional** in the current c
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/team-zypher/supplysense.git
-cd supplysense
+git clone https://github.com/ARYAN10227/SupplySense.git
+cd SupplySense
 
 # 2. Create your environment file
 cp .env.example backend/.env
@@ -304,10 +309,11 @@ https://github.com/user-attachments/assets/9b176a24-03f8-416d-b1c8-35b35fc12d24
 After seeding the database, log in with the pre-configured demo account:
 
 ```
-Shop Name: Ramesh Medical Store
-City:      Nagpur
-State:     Maharashtra
+Phone:    +919876543210
+Password: demo1234
 ```
+
+The demo account belongs to *Ramesh Medical Store* (Nagpur, Maharashtra). The same login works on the [live demo](https://stock-sense-orpin.vercel.app).
 
 ### API Examples
 
@@ -536,7 +542,7 @@ graph TB
     end
 
     subgraph "Data Layer"
-        DB[("💾 PostgreSQL<br/>Supabase Cloud")]
+        DB[("💾 PostgreSQL<br/>Render Postgres")]
         CHROMADB[("🧬 ChromaDB<br/>Embeddings")]
         LOOKUP["📁 Lookup JSONs<br/>diseases · festivals · weather"]
     end
@@ -600,7 +606,7 @@ supplysense/
 │   ├── seed_data.py              # Demo data seeder (products + sales)
 │   ├── requirements.txt          # Python dependencies
 │   ├── Dockerfile                # Backend container image
-│   ├── routers/                  # API endpoint handlers (12 routers)
+│   ├── routers/                  # API endpoint handlers (11 routers)
 │   │   ├── auth.py               #   JWT login/register
 │   │   ├── inventory.py          #   Product CRUD + stock management + health analytics
 │   │   ├── upload.py             #   CSV/image upload + OCR + category inference
@@ -855,7 +861,7 @@ The following are honest descriptions of what is **not fully implemented** or ha
 | **Multi-user support** | The system supports multiple users with JWT auth, but role-based access control (owner/staff/distributor) is not implemented. |
 | **Notification delivery** | The settings page shows email notification preferences, but external delivery (email/SMS) is not wired up — in-app alerts are the only active channel. |
 | **AI quota limits** | Gemini free tier has rate limits; the system uses `gemini-2.0-flash` with exponential backoff retries and falls back to OpenRouter → Ollama when quota is exhausted. |
-| **Test coverage** | The project does not currently include automated unit or integration tests. |
+| **Test coverage** | There are no automated unit or integration tests yet. CI (GitHub Actions) currently checks that the backend compiles and the frontend builds. |
 
 ---
 
@@ -868,7 +874,7 @@ With more time, we would prioritise:
 3. **Multi-tenant architecture** — Role-based access for shop owners, distributors, and staff
 4. **Notification delivery** — Wire up email/SMS so alerts reach users outside the dashboard
 5. **Historical prediction tracking** — Store each generated forecast snapshot to compute true MAPE over time
-6. **CI/CD pipeline** — Automated build, test, and deploy to Vercel + Render on every push
+6. **Continuous deployment** — Extend the existing CI build checks with tests and gated deploys to Vercel + Render
 7. **Barcode scanning** — Camera-based product identification for faster stock updates
 8. **Supplier portal** — Direct integration for automatic order placement
 
@@ -909,10 +915,11 @@ All commits are signed off in compliance with the **Developer Certificate of Ori
 
 <div align="center">
 
-## 👨‍💻 Developer
-Developed by **Aryan Raj** 
-- [GitHub](https://github.com/ARYAN10227)
-- [LeetCode](https://leetcode.com/ARYAN12work/)
+## 👥 Credits
+
+SupplySense was originally built by **Team Zypher** (Ayush Kumar, Arnav Kumar, Yash Agarwal, Gaurav Kumar) for the NatWest Hackathon 2026 ([original repo](https://github.com/Arnav1709/natwest-cfp)).
+
+This fork is maintained by **Aryan Raj** ([GitHub](https://github.com/ARYAN10227) · [LeetCode](https://leetcode.com/ARYAN12work/)): cloud deployment on Vercel + Render, CI, and documentation.
 
 **SupplySense** — *"From notebook to forecast in 60 seconds."*
 ---

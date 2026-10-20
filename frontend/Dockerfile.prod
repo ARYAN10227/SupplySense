@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────
-# StockSense Frontend — Production Multi-Stage Build
+# SupplySense Frontend — Production Multi-Stage Build
 # ─────────────────────────────────────────────────────────────
 # Stage 1: Build React app with Vite
 # Stage 2: Serve static files with nginx

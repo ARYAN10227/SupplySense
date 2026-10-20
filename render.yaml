@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────
-# StockSense — Render Blueprint (backend + Postgres)
+# SupplySense — Render Blueprint (backend + Postgres)
 # ─────────────────────────────────────────────────────────────
 # Deploy with: Render Dashboard → New → Blueprint → point at this repo.
 # This provisions the FastAPI backend (Docker) + a free Postgres DB.

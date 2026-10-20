@@ -1,5 +1,5 @@
 """
-StockSense Configuration
+SupplySense Configuration
 Loads settings from environment variables / .env file.
 """
 
@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     CORS_ORIGIN_REGEX: Optional[str] = None
 
     # App
-    APP_NAME: str = "StockSense"
+    APP_NAME: str = "SupplySense"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
 

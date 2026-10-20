@@ -1,4 +1,4 @@
-// StockSense — API Service Layer with Request Deduplication
+// SupplySense — API Service Layer with Request Deduplication
 // In dev / Docker (nginx): leave VITE_API_BASE_URL unset → relative "/api"
 //   is proxied to the backend on the same origin.
 // In split cloud deploys (e.g. frontend on Vercel, backend on Render):

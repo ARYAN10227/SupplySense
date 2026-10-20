@@ -1,5 +1,5 @@
 """
-Unified AI Client — Single entry point for all AI/LLM calls in StockSense.
+Unified AI Client — Single entry point for all AI/LLM calls in SupplySense.
 
 Fallback chain: Gemini (cloud) → Ollama (local) → OpenRouter (cloud)
 
