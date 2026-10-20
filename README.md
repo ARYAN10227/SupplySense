@@ -909,14 +909,10 @@ All commits are signed off in compliance with the **Developer Certificate of Ori
 
 <div align="center">
 
-### Team Zypher
-
-| Role | Name |
-|:---|:---|
-| 💻 **Team Leader** | Ayush Kumar |
-| 💻 **Member** | Arnav Kumar |
-| 💻 **Member** | Yash Agarwal |
-| 💻 **Member** | Gaurav Kumar |
+## 👨‍💻 Developer
+Developed by **Aryan Raj** 
+- [GitHub](https://github.com/ARYAN10227)
+- [LeetCode](https://leetcode.com/ARYAN12work/)
 
 **SupplySense** — *"From notebook to forecast in 60 seconds."*
 ---
