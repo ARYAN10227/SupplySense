@@ -68,7 +68,7 @@ export default function Layout() {
         <div className="sidebar-brand">
           <div className="sidebar-brand-icon">📦</div>
           <div className="sidebar-brand-text">
-            Stock<span style={{ color: 'var(--color-primary-light)' }}>Sense</span>
+            Supply<span style={{ color: 'var(--color-primary-light)' }}>Sense</span>
             <span className="sidebar-brand-sub">AI Inventory</span>
           </div>
         </div>

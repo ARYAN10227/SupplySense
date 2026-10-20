@@ -86,7 +86,7 @@ export default function Landing() {
             fontSize: '1.1rem', boxShadow: '0 0 20px rgba(16,185,129,0.2)',
           }}>📦</div>
           <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-primary)' }}>
-            Stock<span style={{ color: 'var(--color-primary-light)' }}>Sense</span>
+            Supply<span style={{ color: 'var(--color-primary-light)' }}>Sense</span>
           </span>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>

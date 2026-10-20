@@ -72,7 +72,7 @@ export default function Login() {
             fontFamily: 'var(--font-display)', fontSize: '2.25rem', fontWeight: 800,
             marginBottom: '0.75rem', lineHeight: 1.2,
           }}>
-            Stock<span style={{ color: 'var(--color-primary-light)' }}>Sense</span>
+            Supply<span style={{ color: 'var(--color-primary-light)' }}>Sense</span>
           </h1>
           <p style={{
             color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6,

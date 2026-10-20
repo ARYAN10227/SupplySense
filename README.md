@@ -284,7 +284,7 @@ SupplySense deploys to free-tier cloud hosting as two independent pieces:
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for step-by-step instructions. Quick summary:
 
 1. **Backend** — Render → New → Blueprint → select repo (uses `render.yaml`). Provisions the Docker backend + free Postgres. After deploy, set `CORS_ORIGINS` to your frontend URL and add `GEMINI_API_KEY`.
-2. **Frontend** — Vercel → New Project → Root Directory `frontend`. Set `VITE_API_BASE_URL` to `https://<your-backend>.onrender.com/api`.
+2. **Frontend** — Vercel → New Project → Root Directory `frontend`. Point the `/api` rewrite in `frontend/vercel.json` at your Render backend URL; Vercel proxies API calls, so no CORS setup is needed.
 
 > ⚠️ In the cloud, always use **Postgres** (Render's free disk is ephemeral — SQLite data is wiped on restart) and set a strong `SECRET_KEY` with `DEBUG=false`.
 

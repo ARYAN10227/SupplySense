@@ -39,10 +39,11 @@ health check path `/api/health`, then set the variables above plus a Postgres `D
 
 1. Vercel → **New Project** → import this repo.
 2. Set **Root Directory** to `frontend`. `vercel.json` handles the Vite build and SPA routing.
-3. Add an environment variable:
-   - `VITE_API_BASE_URL` = `https://<your-backend>.onrender.com/api`
-4. Deploy, then make sure the backend's `CORS_ORIGINS` contains the final Vercel URL
-   (scheme + host, no trailing slash).
+3. Point the `/api/:path*` rewrite in `frontend/vercel.json` at your Render backend URL.
+   Vercel then proxies API calls server-side, so the browser makes same-origin requests
+   (no CORS setup or `VITE_API_BASE_URL` needed). Setting `VITE_API_BASE_URL` instead also
+   works, but it must be present at build time and the backend's `CORS_ORIGINS` must list the Vercel URL.
+4. Deploy.
 
 ---
 
