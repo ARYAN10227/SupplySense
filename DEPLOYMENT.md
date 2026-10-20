@@ -22,7 +22,7 @@ The included `render.yaml` blueprint provisions both:
 2. Render creates the backend web service (Docker, root `backend/`) and a free Postgres database.
    `SECRET_KEY` is generated and `DATABASE_URL` is wired automatically.
 3. After the first deploy, set these in the backend service's **Environment** tab:
-   - `CORS_ORIGINS` = your frontend URL, e.g. `https://stock-sense-orpin.vercel.app`
+   - `CORS_ORIGINS` = your frontend URL, e.g. `https://supply-sense-mu.vercel.app`
    - *(optional)* `CORS_ORIGIN_REGEX` = `https://.*\.vercel\.app` to allow Vercel preview deploys
    - `GEMINI_API_KEY` and/or `OPENROUTER_API_KEY` for AI features (forecasting works without them;
      OCR, explanations and translations need one)
